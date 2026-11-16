@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>通知雷达 · 30 条真实通知验收</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; padding:36px 40px 28px; background:#0b1120; color:#e6edf7;
+         font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif; }
+  h1 { margin:0 0 6px; font-size:22px; letter-spacing:.5px; }
+  .sub { color:#7f8ea6; font-size:13px; margin-bottom:22px; }
+  .kpis { display:flex; gap:14px; margin-bottom:22px; }
+  .kpi { flex:1; background:#111a2e; border:1px solid #1e2b45; border-radius:10px; padding:14px 18px; }
+  .kpi .v { font-size:26px; font-weight:700; color:#4ade80; font-family:ui-monospace,Consolas,monospace; }
+  .kpi .k { font-size:12px; color:#7f8ea6; margin-top:4px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  thead th { text-align:left; padding:9px 8px; color:#8fa3c0; font-weight:600; font-size:12px;
+             border-bottom:1px solid #24344f; white-space:nowrap; }
+  tbody td { padding:8px; border-bottom:1px solid #16203a; vertical-align:middle; }
+  tbody tr:nth-child(even) { background:#0e1728; }
+  .n { color:#5a6b85; width:30px; }
+  .name { max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .mono { font-family:ui-monospace,Consolas,monospace; }
+  .dim { color:#6b7c96; }
+  .tag { background:#16233b; color:#93b4e0; border-radius:5px; padding:2px 7px; font-size:12px; }
+  .mark { font-weight:700; text-align:center; width:26px; }
+  .mark.ok { color:#4ade80; }
+  .mark.bad { color:#f87171; }
+  .worth { white-space:nowrap; }
+  .score { text-align:right; color:#fbbf24; width:44px; }
+  .critic { font-family:ui-monospace,Consolas,monospace; font-size:11px; color:#7f8ea6; }
+  .foot { margin-top:18px; color:#6b7c96; font-size:12px; line-height:1.8; }
+  .foot b { color:#9fb3d1; font-weight:600; }
+</style></head>
+<body>
+  <h1>30 条真实通知 · 验收结果</h1>
+  <div class="sub">来源：北邮信息服务门户「校内通知」连续三页（2026-11-06 至 11-13），人工逐条标注</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="v">30/30</div><div class="k">截止日期抽取</div></div>
+    <div class="kpi"><div class="v">30/30</div><div class="k">结论方向判断</div></div>
+    <div class="kpi"><div class="v">0</div><div class="k">无矛盾通知被误拦</div></div>
+    <div class="kpi"><div class="v">30</div><div class="k">覆盖通知类别</div></div>
+  </div>
+
+  <table>
+    <thead><tr>
+      <th>#</th><th>通知</th><th>类别</th><th>解析截止日</th><th>人工标注</th>
+      <th>A</th><th>结论</th><th>分</th><th>B</th><th>自审</th>
+    </tr></thead>
+    <tbody><tr>
+      <td class="n">1</td>
+      <td class="name">01-邮你搜学术搜索大赛</td>
+      <td><span class="tag">竞赛</span></td>
+      <td class="mono">2026-11-20</td>
+      <td class="mono dim">2026-11-20</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">强烈建议</td>
+      <td class="mono score">88</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">2</td>
+      <td class="name">02-光影悦读镖人报名</td>
+      <td><span class="tag">活动</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">63</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">3</td>
+      <td class="name">03-国脉大讲堂32讲</td>
+      <td><span class="tag">讲座</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">60</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">4</td>
+      <td class="name">04-邮兰讲坛-AI学术风险</td>
+      <td><span class="tag">讲座</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">58</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">5</td>
+      <td class="name">05-IEEE-Xplore-MOOC</td>
+      <td><span class="tag">讲座</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">58</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">6</td>
+      <td class="name">06-征集学生工作案例</td>
+      <td><span class="tag">招募</span></td>
+      <td class="mono">2026-12-20</td>
+      <td class="mono dim">2026-12-20</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">7</td>
+      <td class="name">07-青年教师教学基本功选拔赛</td>
+      <td><span class="tag">竞赛</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">8</td>
+      <td class="name">08-西土城临时停水</td>
+      <td><span class="tag">事务</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">9</td>
+      <td class="name">09-雁翔团校入团培训</td>
+      <td><span class="tag">活动</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">10</td>
+      <td class="name">10-邮兰讲坛-AI学术外脑</td>
+      <td><span class="tag">讲座</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">58</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">11</td>
+      <td class="name">11-招生宣传寒假实践</td>
+      <td><span class="tag">招募</span></td>
+      <td class="mono">2026-11-20</td>
+      <td class="mono dim">2026-11-20</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">强烈建议</td>
+      <td class="mono score">100</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE,W3_LOW_CONF_STRONG</td>
+    </tr>
+<tr>
+      <td class="n">12</td>
+      <td class="name">12-大学物理辅导答疑</td>
+      <td><span class="tag">活动</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">63</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">13</td>
+      <td class="name">13-校企精品课开源合规</td>
+      <td><span class="tag">讲座</span></td>
+      <td class="mono">2026-11-11</td>
+      <td class="mono dim">2026-11-11</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">已截止</td>
+      <td class="mono score">0</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">14</td>
+      <td class="name">14-IEEE-MOOC-科研职业能力</td>
+      <td><span class="tag">讲座</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">50</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">15</td>
+      <td class="name">15-智能基座优秀教师奖励</td>
+      <td><span class="tag">竞赛</span></td>
+      <td class="mono">2026-11-13</td>
+      <td class="mono dim">2026-11-13</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">16</td>
+      <td class="name">16-公选课新开课申请</td>
+      <td><span class="tag">活动</span></td>
+      <td class="mono">2026-11-18</td>
+      <td class="mono dim">2026-11-18</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">17</td>
+      <td class="name">17-沙河电费充值升级</td>
+      <td><span class="tag">事务</span></td>
+      <td class="mono">2026-11-11</td>
+      <td class="mono dim">2026-11-11</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">18</td>
+      <td class="name">18-国家社科基金招标</td>
+      <td><span class="tag">事务</span></td>
+      <td class="mono">2026-11-16</td>
+      <td class="mono dim">2026-11-16</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">19</td>
+      <td class="name">19-二里庄售房信息</td>
+      <td><span class="tag">事务</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">20</td>
+      <td class="name">20-人机协作编程大赛报名</td>
+      <td><span class="tag">竞赛</span></td>
+      <td class="mono">2026-11-20</td>
+      <td class="mono dim">2026-11-20</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">强烈建议</td>
+      <td class="mono score">98</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">21</td>
+      <td class="name">21-跨文化能力竞赛</td>
+      <td><span class="tag">竞赛</span></td>
+      <td class="mono">2026-11-17</td>
+      <td class="mono dim">2026-11-17</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">强烈建议</td>
+      <td class="mono score">88</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">22</td>
+      <td class="name">22-学生纾困关爱基金</td>
+      <td><span class="tag">其他</span></td>
+      <td class="mono">2026-11-23</td>
+      <td class="mono dim">2026-11-23</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">65</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">23</td>
+      <td class="name">23-棒垒球队招新</td>
+      <td><span class="tag">招募</span></td>
+      <td class="mono">2026-12-31</td>
+      <td class="mono dim">2026-12-31</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">强烈建议</td>
+      <td class="mono score">83</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE,W3_LOW_CONF_STRONG</td>
+    </tr>
+<tr>
+      <td class="n">24</td>
+      <td class="name">24-悦读讲堂笔墨与代码</td>
+      <td><span class="tag">讲座</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">58</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">25</td>
+      <td class="name">25-一站式社区活动安排</td>
+      <td><span class="tag">活动</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">65</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">26</td>
+      <td class="name">26-传邮杯羽毛球赛</td>
+      <td><span class="tag">竞赛</span></td>
+      <td class="mono">2026-11-13</td>
+      <td class="mono dim">2026-11-13</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">已截止</td>
+      <td class="mono score">0</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">—</td>
+    </tr>
+<tr>
+      <td class="n">27</td>
+      <td class="name">27-心理趣味运动会</td>
+      <td><span class="tag">活动</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">可以考虑</td>
+      <td class="mono score">65</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">28</td>
+      <td class="name">28-女性肿瘤防治科普</td>
+      <td><span class="tag">活动</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">29</td>
+      <td class="name">29-教师教学创新大赛培训</td>
+      <td><span class="tag">竞赛</span></td>
+      <td class="mono">—</td>
+      <td class="mono dim">—</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W2_NO_DEADLINE</td>
+    </tr>
+<tr>
+      <td class="n">30</td>
+      <td class="name">30-校园通行证办理</td>
+      <td><span class="tag">事务</span></td>
+      <td class="mono">2026-11-23</td>
+      <td class="mono dim">2026-11-23</td>
+      <td class="mark ok">✓</td>
+      <td class="worth">不建议</td>
+      <td class="mono score">18</td>
+      <td class="mark ok">✓</td>
+      <td class="critic">W1_MULTI_DEADLINE</td>
+    </tr></tbody>
+  </table>
+
+  <div class="foot">
+    <b>A · 截止日期</b>：以人工标注为准。原文没有报名截止的，解析器必须报空——给一个错的倒计时比说"没有"更糟。<br>
+    <b>B · 结论方向</b>：值得 ↔ 强烈建议/可以考虑；不值得 ↔ 不建议/信息不足/待核实；已过期 ↔ 已截止。三档分开算。<br>
+    一键复跑：<span class="mono">python tools/accuracy.py</span>　标注文件：<span class="mono">testset/labels.md</span>
+  </div>
+</body></html>

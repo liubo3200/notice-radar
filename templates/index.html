@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>通知雷达 NoticeRadar · 校园通知的机会匹配 Agent</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="radar">
+      <svg viewBox="0 0 40 40" width="34" height="34">
+        <circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="1.2"/>
+        <circle cx="20" cy="20" r="10" fill="none" stroke="currentColor" stroke-opacity=".2" stroke-width="1.2"/>
+        <circle cx="20" cy="20" r="3" fill="currentColor"/>
+        <line class="sweep" x1="20" y1="20" x2="20" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="28" cy="12" r="1.8" fill="currentColor" opacity=".9"/>
+      </svg>
+    </div>
+    <div class="brand-txt">
+      <h1>通知雷达</h1>
+      <span>NOTICE RADAR · 粘一条通知，告诉你值不值得参加</span>
+    </div>
+  </div>
+  <div class="engine" id="engineTag">待解析</div>
+</header>
+
+<main class="wrap">
+
+  <section class="panel input-panel">
+    <div class="panel-head">
+      <span class="step">01</span>
+      <h2>粘贴通知原文</h2>
+    </div>
+
+    <div class="chips" id="chips">
+      <button class="chip" data-key="竞赛">竞赛通知</button>
+      <button class="chip" data-key="讲座">学术讲座</button>
+      <button class="chip" data-key="招募">志愿招募</button>
+      <button class="chip trap" data-key="陷阱">矛盾通知（测自审）</button>
+    </div>
+
+    <textarea id="input" placeholder="把学院群、门户网站、公众号里的通知整段粘进来，不用整理格式……"></textarea>
+
+    <div class="actions">
+      <button id="run" class="btn-primary">
+        <span class="btn-txt">开始解析</span>
+      </button>
+      <button id="clear" class="btn-ghost">清空</button>
+    </div>
+
+    <p class="hint">五个 Agent 接力：抽取字段 → 校验日期 → 检索条款 → 评估取舍 → 自审矛盾</p>
+    <p class="hint" id="kbLine">知识库加载中…</p>
+  </section>
+
+  <section class="panel result-panel" id="result">
+    <div class="empty" id="empty">
+      <div class="empty-ico">◎</div>
+      <p>左侧粘一段通知，右侧会给出<br><b>截止日、匹配度、下一步动作</b></p>
+    </div>
+    <div id="content" class="content hidden"></div>
+  </section>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
