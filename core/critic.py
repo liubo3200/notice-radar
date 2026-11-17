@@ -14,6 +14,7 @@ Agent 5 · 自审（Critic）
   W1 存在多个截止日，只报了其中一个
   W2 没有报名截止，只有举办时间（别把举办日当倒计时）
   W3 置信度低却给出强结论
+  W4 知识库没有可引条款，却给出最高档结论（依据只剩规则，别再对外说"有校规支撑"）
 """
 
 import datetime
@@ -121,6 +122,20 @@ def review(fields, evaluation, check, text="", today=None, round_no=1):
             "warning", "W3_LOW_CONF_STRONG",
             "字段置信度为低，却给出「强烈建议」",
             "先把原文补全再下结论",
+        ))
+
+    # ---- W4 没有可引条款，却给出最高档结论
+    # 触发场景：知识库只收了本校三类条款，外校/新类型通知会 grounded=false。
+    # 此时"强烈建议"是规则判断（类别 + 截止 + 资格）撑起来的，没有出处。
+    # 结论不改，但必须说清楚，否则用户会以为有校规依据。
+    # 已有硬矛盾（E1/E2/E3）时不再追加：那种情况下"无依据"只是噪音，
+    # 结论本来就会被降级，多一条警告反而让真正的问题不显眼。
+    has_error_yet = any(i["level"] == "error" for i in issues)
+    if not has_error_yet and evaluation.get("grounded") is False and worth == "强烈建议":
+        issues.append(_issue(
+            "warning", "W4_NO_BASIS_STRONG",
+            "知识库里没有匹配到可引条款，这个「强烈建议」只来自规则判断，没有出处",
+            "结论可以看，但别当成有校规依据；换成外校通知时尤其注意",
         ))
 
     has_error = any(i["level"] == "error" for i in issues)
