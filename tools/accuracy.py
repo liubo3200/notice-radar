@@ -17,6 +17,12 @@ import sys
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE)
 
+# 固定评测基准日：测试集是 11-06 至 11-13 采集的快照，若按真实当天日期评估，
+# "最早未过期节点"会随时间漂移，同一份代码今天 30/30、下月就不是。
+# 可用环境变量 NOTICE_RADAR_TODAY 覆盖。
+BASE_DATE = (os.environ.get("NOTICE_RADAR_TODAY") or "2026-11-16").strip()
+os.environ["NOTICE_RADAR_TODAY"] = BASE_DATE
+
 import app as A  # noqa: E402
 
 CLEAN = os.path.join(BASE, "testset", "clean")

@@ -12,6 +12,7 @@ from urllib.parse import quote
 
 from flask import Flask, jsonify, render_template, request, Response
 
+from core import clock
 from core import critic as critic_agent
 from core import ics as ics_builder
 from core import retriever
@@ -21,11 +22,10 @@ from core.validator import validate
 
 app = Flask(__name__)
 
-_T = datetime.date.today()
-
-
 def _cn(days):
-    d = _T + datetime.timedelta(days=days)
+    # 每次调用都取当前基准日：示例通知里的日期随当天滚动，
+    # 服务连跑几天也不会把「矛盾通知」演成过期通知。
+    d = clock.today() + datetime.timedelta(days=days)
     return f"{d.month}月{d.day}日"
 
 

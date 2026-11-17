@@ -6,7 +6,9 @@
 import datetime
 import hashlib
 
-TODAY = datetime.date.today()
+from core import clock
+
+TODAY = clock.today()
 
 
 def _escape(s):
@@ -34,18 +36,35 @@ def _fold(line, limit=73):
     return "\r\n".join(out)
 
 
+def _nodes(fields):
+    """取出全部需要写进日历的时间节点：多个截止节点各一个事件，没有截止才退回举办日。"""
+    out, seen = [], set()
+    for n in (fields.get("deadlines") or []):
+        d = (n.get("date") or "").strip()
+        if not d:
+            continue
+        label = (n.get("label") or "截止").strip() or "截止"
+        key = (label, d)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append((label, d))
+    if out:
+        return out
+    if fields.get("deadline"):
+        return [("截止", fields["deadline"])]
+    if fields.get("event_date"):
+        return [("活动", fields["event_date"])]
+    return []
+
+
 def build_ics(fields, evaluation=None):
     name = fields.get("event_name") or "校园通知"
-    deadline = fields.get("deadline")
-    # 讲座/线上课没有截止日，用举办日生成"活动"事件
-    kind = "截止" if deadline else "活动"
-    date_str = deadline or fields.get("event_date")
-    if not date_str:
+    nodes = _nodes(fields)
+    if not nodes:
         raise ValueError("这条通知没有可用的日期，无法生成日历事件")
 
-    d = datetime.date.fromisoformat(date_str)
-    uid = hashlib.md5(f"{name}{date_str}".encode("utf-8")).hexdigest()[:16]
-    stamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%SZ")
+    stamp = clock.now().strftime("%Y%m%dT%H%M%SZ")
 
     desc_parts = []
     if evaluation:
@@ -64,24 +83,32 @@ def build_ics(fields, evaluation=None):
         "PRODID:-//NoticeRadar//BUPT//CN",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
-        "BEGIN:VEVENT",
-        f"UID:{uid}@notice-radar",
-        f"DTSTAMP:{stamp}",
-        f"DTSTART;VALUE=DATE:{d.strftime('%Y%m%d')}",
-        f"SUMMARY:{_escape('【' + kind + '】' + name)}",
-        f"DESCRIPTION:{_escape(chr(10).join(desc_parts))}",
-        "TRANSP:TRANSPARENT",
-        "BEGIN:VALARM",
-        "TRIGGER:-P3D",
-        "ACTION:DISPLAY",
-        f"DESCRIPTION:{_escape('还有3天' + kind + '：' + name)}",
-        "END:VALARM",
-        "BEGIN:VALARM",
-        "TRIGGER:-P1D",
-        "ACTION:DISPLAY",
-        f"DESCRIPTION:{_escape('明天' + kind + '：' + name)}",
-        "END:VALARM",
-        "END:VEVENT",
-        "END:VCALENDAR",
     ]
+
+    # 一个截止节点 = 一个 VEVENT；每个事件自带提前 3 天 + 提前 1 天两条提醒
+    for label, date_str in nodes:
+        d = datetime.date.fromisoformat(date_str)
+        uid = hashlib.md5(f"{name}{label}{date_str}".encode("utf-8")).hexdigest()[:16]
+        lines.extend([
+            "BEGIN:VEVENT",
+            f"UID:{uid}@notice-radar",
+            f"DTSTAMP:{stamp}",
+            f"DTSTART;VALUE=DATE:{d.strftime('%Y%m%d')}",
+            f"SUMMARY:{_escape('【' + label + '】' + name)}",
+            f"DESCRIPTION:{_escape(chr(10).join(desc_parts))}",
+            "TRANSP:TRANSPARENT",
+            "BEGIN:VALARM",
+            "TRIGGER:-P3D",
+            "ACTION:DISPLAY",
+            f"DESCRIPTION:{_escape('还有3天' + label + '：' + name)}",
+            "END:VALARM",
+            "BEGIN:VALARM",
+            "TRIGGER:-P1D",
+            "ACTION:DISPLAY",
+            f"DESCRIPTION:{_escape('明天' + label + '：' + name)}",
+            "END:VALARM",
+            "END:VEVENT",
+        ])
+
+    lines.extend(["END:VCALENDAR"])
     return "\r\n".join(_fold(l) for l in lines) + "\r\n"

@@ -6,6 +6,8 @@ Agent 3 · 评估（Evaluator）
 
 import re
 
+from core import clock
+
 DEFAULT_PROFILE = {
     "identity": "北京邮电大学 通信工程 大一本科生",
     "goal": "保研；走通信 + 软件复合路线",
@@ -187,9 +189,7 @@ def evaluate(fields, text="", profile=None, retrieval=None):
         nodes = fields.get("deadlines") or []
         node = next((n for n in nodes if n.get("date") == d), {})
         label = node.get("label") or "截止"
-        from datetime import date as _date
-
-        today_s = _date.today().isoformat()
+        today_s = clock.today().isoformat()
         signup_passed = any(
             "报名" in (n.get("label") or "") and (n.get("date") or "9999") < today_s
             for n in nodes

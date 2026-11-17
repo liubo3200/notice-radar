@@ -19,6 +19,8 @@ Agent 5 · 自审（Critic）
 import datetime
 import re
 
+from core import clock
+
 DATE_FULL = re.compile(r"(20\d{2})\s*[年\-/\.]\s*(\d{1,2})\s*[月\-/\.]\s*(\d{1,2})\s*日?")
 DATE_CN = re.compile(r"(?<!\d)(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]")
 DATE_SLASH = re.compile(r"(?<!\d)(\d{1,2})\s*/\s*(\d{1,2})(?!\d)")
@@ -50,7 +52,7 @@ def _issue(level, code, message, fix=""):
 
 def review(fields, evaluation, check, text="", today=None, round_no=1):
     """返回 {"verdict", "issues", "patches"}。verdict=reject 时上游必须重跑。"""
-    today = today or datetime.date.today()
+    today = today or clock.today()
     issues, patches = [], {}
 
     name = (fields.get("event_name") or "").strip()

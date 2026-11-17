@@ -142,6 +142,18 @@ python tools/ingest.py "推免规定.txt" --title "北京邮电大学推荐优�
 
 复跑：`python tools/accuracy.py`。标注在 `testset/labels.md`，原始文本在 `testset/clean/`。
 
+**以上数字可复现，前提是固定时间基准。** 测试集采集于 **2026-11-16**，而"是否过期""最早未过期节点"都依赖当天日期——直接拿现在的真实日期跑，跨过 12 月就会有一两条从"有效"变成"过期"，命中率随之漂移。所以：
+
+- `core/clock.py` 统一了全项目的时间来源（parser / validator / evaluator / critic / ics 都从这里取），不再各自调 `date.today()`；
+- `tools/accuracy.py` 启动时把基准日钉死为 `2026-11-16`（测试集采集日），任何时间跑都是 30/30；
+- 想换基准日，设环境变量即可：
+
+```bash
+NOTICE_RADAR_TODAY=2026-11-16 python tools/accuracy.py
+```
+
+线上服务同样支持这个变量：设成某一天，示例通知里的日期都会以该日为原点滚动，"矛盾通知"样例的长跑演示也不会演着演着变成"过期通知"。
+
 ## 已知边界
 
 - 只处理**文本**，不自动抓取网页（校内门户需登录，爬取不稳定，故不做）。

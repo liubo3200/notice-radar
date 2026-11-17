@@ -11,7 +11,9 @@ Agent 2 · 校验（Validator）
 import datetime
 import re
 
-TODAY = datetime.date.today()
+from core import clock
+
+TODAY = clock.today()
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 OPTIONAL = ["event_time", "target", "organizer", "category", "link"]
