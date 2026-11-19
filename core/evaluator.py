@@ -21,6 +21,8 @@ TECH_KEYS = ["编程", "算法", "开发", "人工智能", "AI", "程序", "软�
 FREE_KEYS = ["免费", "0元", "￥0", "无报名费", "不收取", "公益"]
 TEAM_KEYS = ["组队", "团队", "小队", "每队", "1-3人", "3-5人"]
 MENTOR_KEYS = ["指导教师", "指导老师", "导师"]
+# 强制参与的事务：不是"机会"，不该用匹配度衡量
+DUTY_KEYS = ["选举", "投票", "选民证", "签到", "集合", "务必", "严肃对待"]
 
 # 抬头是"各学院/各教学单位"且通篇不出现"同学"，基本就是面向单位报送，不是面向学生个人
 ORG_HEAD = re.compile(r"^\s*各(学院|教学单位|单位|部门|分党委|团委)", re.M)
@@ -101,6 +103,10 @@ def evaluate(fields, text="", profile=None, retrieval=None):
             "grounded": False,
             "score_parts": [{"label": "已截止，不再计分", "delta": 0}],
         }
+
+    # 强制参与的事务（投票、集合、签到）不是"机会"，用分数衡量它本身就不对。
+    # 实测：一条要求明早 8:10 集合的选举通知被判成「可以考虑 50」，用户当场质疑。
+    is_duty = any(k in blob for k in DUTY_KEYS)
 
     score = 50
     reasons, risks, actions = [], [], []
@@ -247,7 +253,13 @@ def evaluate(fields, text="", profile=None, retrieval=None):
     elif category in ("竞赛", "招募", "活动"):
         risks.append("知识库暂无对应认定条款，加分/时长结论待向学院核实")
 
-    summary = _summary(worth, fields, days_left)
+    if is_duty:
+        reasons.insert(0, "属于统一安排的事务（投票 / 集合 / 签到），不是可选机会：按时到场即可")
+        risks.insert(0, "这条不用判断值不值得——按上面的时间地点到场，漏了要补办")
+        parts.append({"label": "义务事务，不计机会价值", "delta": 0})
+
+    summary = ("这是必须执行的事务通知，不是机会：按上面的时间到场，不用看匹配度。"
+               if is_duty else _summary(worth, fields, days_left))
 
     return {
         "worth": worth,

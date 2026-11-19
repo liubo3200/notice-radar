@@ -117,15 +117,31 @@ def _strip_prefix(s):
     return s.strip(" 　")
 
 
+_SYMBOL_ONLY = re.compile(r"[^\w\u4e00-\u9fff]+")
+
+
 def _pick_title(lines):
+    # 0) 「【人大代表选举投票】❗️❗️❗️」：整行只有括号和表情时，括号里就是标题。
+    #    （【竞赛通知】北京邮电大学…这种括号后面还有正文的，不适用，走下面的规则）
+    if lines:
+        m = re.match(r"^[【\[《]([^】\]》]{2,30})[】\]》]\s*[^\w\u4e00-\u9fff]*$", lines[0].strip())
+        if m:
+            t = _GENERIC_WORD.sub("", m.group(1)).strip()
+            if 4 <= len(t) <= 30:
+                return t
+
     # 1) 优先取"……通知 / 招募 / 大赛"这类标题行
     for line in lines[:8]:
-        s = _strip_prefix(line)
+        # 「【人大代表选举投票】❗️❗️❗️」剥掉括号后只剩表情，会把整条标题带偏
+        s = _SYMBOL_ONLY.sub(" ", _strip_prefix(line)).strip()
         if 4 <= len(s) <= 50 and re.search(r"(通知|公告|告示|招募|大赛|竞赛|章程|方案)$", s):
             return s
     # 2) 退化为第一行像标题的文本
     for line in lines[:8]:
-        s = _strip_prefix(line)
+        # "投票时间：本周五 8:00-10:00" 是字段行，不是标题
+        if re.match(r"^[^：:]{1,10}[：:]", line.strip()):
+            continue
+        s = _SYMBOL_ONLY.sub(" ", _strip_prefix(line)).strip()
         if len(s) < 6 or s.startswith(TITLE_SKIP):
             continue
         if re.match(r"^[一二三四五六七八九十]、", s):
@@ -240,6 +256,39 @@ def _pick_event_date(text):
     return d.isoformat() if d else None
 
 
+REL_WEEKDAY = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6, "七": 6}
+
+
+def _relative_date(text, today=None):
+    """群通知常写"明天""本周五"，没有绝对日期。
+
+    这类通知在测试集里抽不到时间就会退化成"没有截止日期"，倒计时整块消失——
+    用户实测里最刺眼的就是这一点（一条要求明早 8:10 集合的通知，界面上没有时间）。
+    """
+    today = today or TODAY
+    if "大后天" in text:
+        return today + datetime.timedelta(days=3)
+    if re.search(r"(?<!大)后天", text):
+        return today + datetime.timedelta(days=2)
+    if re.search(r"明天|明日", text):
+        return today + datetime.timedelta(days=1)
+    m = re.search(r"(下下|下|本|这|上)?\s*(?:周|星期|礼拜)\s*([一二三四五六日天七])", text)
+    if m:
+        mod, cn = m.group(1) or "", m.group(2)
+        cur = today.weekday()
+        delta = REL_WEEKDAY[cn] - cur
+        if mod == "下下":
+            delta += 14
+        elif mod == "下":
+            delta += 7
+        elif mod == "上":
+            delta -= 7
+        elif delta < 0:          # "本周五"说在周日之后，只有可能是下周
+            delta += 7
+        return today + datetime.timedelta(days=delta)
+    return None
+
+
 def _pick_target(text):
     lines = _clean_lines(text)
     # 0) 标签行没写值（"二、培训对象" 换行写对象）→ 取下一行
@@ -261,6 +310,10 @@ def _pick_target(text):
         val = re.split(r"\s*(主办|承办|时间|地点|报名|联系|请|需|要求|务必)", val)[0]
         val = re.split(r"[，,；;]", val)[0]
         return val.strip(" ：:，,")
+    # 没有"面向/对象"这类前缀，但写了具体班级：「明天请11-13班同学于8:10集合」
+    m = re.search(r"(\d{1,2}\s*[-–—~至]\s*\d{1,2}\s*班(?:同学|学生)?)", text)
+    if m:
+        return m.group(1).replace(" ", "")
     if "全体" in text and "学生" in text:
         return "全体学生"
     return None
@@ -342,12 +395,18 @@ def parse_by_rules(text):
     lines = _clean_lines(text)
     title = _pick_title(lines)
     deadlines, dl_source = _pick_deadlines(text, lines)
+    event_date = _pick_event_date(text)
+    if not deadlines and not event_date:
+        rel = _relative_date(text)
+        if rel:
+            event_date = rel.isoformat()
+            dl_source = "relative"
     return {
         "event_name": title or None,
         "deadline": _pick_primary(deadlines),
         "deadlines": deadlines,
         "deadline_source": dl_source,
-        "event_date": _pick_event_date(text),
+        "event_date": event_date,
         "event_time": _pick_time(text),
         "target": _pick_target(text),
         "organizer": _pick_organizer(text),
