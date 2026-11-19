@@ -85,6 +85,7 @@ def evaluate(fields, text="", profile=None, retrieval=None):
             "actions": ["直接跳过", "确实需要时，先找发布部门确认能否例外"],
             "basis": [],
             "grounded": False,
+            "score_parts": [{"label": "资格不符，直接封顶", "delta": 18}],
         }
 
     if days_left is not None and days_left < 0:
@@ -98,14 +99,19 @@ def evaluate(fields, text="", profile=None, retrieval=None):
             "actions": ["如需参加，留意下一届的报名窗口"],
             "basis": [],
             "grounded": False,
+            "score_parts": [{"label": "已截止，不再计分", "delta": 0}],
         }
 
     score = 50
     reasons, risks, actions = [], [], []
+    # 分数构成逐项留痕：用户最不信的就是"凭什么这么多分"，把加减项摊开给他看
+    parts = [{"label": "基础分", "delta": 50}]
 
     # ---- 类别
     cat_score = {"竞赛": 25, "招募": 10, "活动": 5, "讲座": 0, "其他": 0}
     score += cat_score.get(category, 0)
+    if cat_score.get(category, 0):
+        parts.append({"label": f"类别为{category}", "delta": cat_score[category]})
     if category == "竞赛":
         reasons.append("属于竞赛类，可沉淀为可复用的作品或获奖经历")
     elif category == "招募":
@@ -117,14 +123,22 @@ def evaluate(fields, text="", profile=None, retrieval=None):
     if any(k in blob for k in FREE_KEYS):
         score += 10
         reasons.append("零报名成本，试错代价极低")
+        parts.append({"label": "零报名成本", "delta": 10})
 
     # ---- 资格
     if "研究生" in target and "本科" not in target:
         score -= 40
+        parts.append({"label": "面向研究生", "delta": -40})
         risks.append("面向研究生，你可能不符合报名资格")
-    elif target and ("本科" in target or "学生" in target or "全体" in target):
+    elif target and re.search(r"\d+\s*[-–—~至]\s*\d+\s*班|\d+\s*班", target):
+        # 限定到具体班级（"11-13 班同学"）时不能说"你符合条件"——用户是否在范围内
+        # 只有他自己知道。给分不如给提醒，实测用户最不信的就是这类越权判断。
+        risks.append(f"面向对象限定为「{target}」，确认你所在班级或学院在范围内")
+        parts.append({"label": "面向班级限定，未加分", "delta": 0})
+    elif target and ("本科" in target or "学生" in target or "同学" in target or "全体" in target):
         score += 10
         reasons.append(f"面向对象为「{target}」，你符合条件")
+        parts.append({"label": "面向对象包含你", "delta": 10})
     elif not target:
         reasons.append("原文未写面向对象，默认向全校学生开放，建议报名前确认")
 
@@ -133,11 +147,13 @@ def evaluate(fields, text="", profile=None, retrieval=None):
     if hits:
         score += 8
         reasons.append(f"内容涉及{hits[0]}，与你的技术路线相关")
+        parts.append({"label": f"涉及{hits[0]}", "delta": 8})
 
     # ---- 志愿时长
     if "志愿" in blob or "服务时长" in blob:
         score += 8
         reasons.append("可认定志愿服务时长，对劳动教育学时有用")
+        parts.append({"label": "可认定志愿时长", "delta": 8})
 
     # ---- 时间
     is_lecture = category == "讲座"
@@ -154,12 +170,14 @@ def evaluate(fields, text="", profile=None, retrieval=None):
             risks.append(f"{days_left} 天后举行，确认是否与课程冲突")
         elif days_left <= 1:
             score -= 5
+            parts.append({"label": f"距截止仅剩 {days_left} 天", "delta": -5})
             risks.append(f"距截止仅剩 {days_left} 天，材料准备时间非常紧")
         elif days_left <= 3:
             risks.append(f"距截止 {days_left} 天，需要立刻动手")
         else:
             score += 5
             reasons.append(f"距截止还有 {days_left} 天，准备时间充足")
+            parts.append({"label": f"距截止还有 {days_left} 天", "delta": 5})
 
     # ---- 门槛
     if any(k in blob for k in TEAM_KEYS):
@@ -241,6 +259,7 @@ def evaluate(fields, text="", profile=None, retrieval=None):
         "actions": actions[:3],
         "basis": basis,
         "grounded": grounded,
+        "score_parts": parts,
         "profile": profile.get("identity", ""),
     }
 

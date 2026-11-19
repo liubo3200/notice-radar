@@ -190,6 +190,16 @@ function render(data) {
       </div>
     </div>
 
+    ${(ev.score_parts || []).length ? `
+    <div class="section">
+      <div class="section-title">${ev.score} 分怎么算出来的</div>
+      <div class="parts">${ev.score_parts.map((p) => `
+        <div class="part"><span>${esc(p.label)}</span><b class="${p.delta < 0 ? "down" : "up"}">${p.delta > 0 ? "+" : ""}${p.delta}</b></div>`).join("")}
+        <div class="part total"><span>合计</span><b>${ev.score}</b></div>
+      </div>
+      <p class="parts-hint">权重是固定的规则，不随通知变化。画像：${esc(ev.profile || "本科生")}——换一个人，同一份通知的分会不一样。</p>
+    </div>` : ""}
+
     ${(ev.reasons || []).length ? `
     <div class="section">
       <div class="section-title">为什么是这个判断</div>

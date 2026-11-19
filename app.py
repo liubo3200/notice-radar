@@ -119,14 +119,18 @@ def _force_verdict(ev, worth):
     ev["priority"] = "P3"
     if worth == "已截止":
         ev["score"] = 0
+        ev["score_parts"] = [{"label": "已过截止日，不再计分", "delta": 0}]
         ev["summary"] = "截止日期已过，不要再投入时间。"
         ev["actions"] = ["如需参加，留意下一届的报名窗口"]
     elif worth == "信息不足":
         ev["score"] = 0
+        ev["score_parts"] = [{"label": "关键字段缺失，不计分", "delta": 0}]
         ev["summary"] = "通知关键信息缺失（标题/日期），无法给出判断，建议补齐原文重试。"
         ev["actions"] = ["把通知标题和截止日期一起重新粘贴一次"]
     elif worth == "待核实":
         ev["score"] = min(ev.get("score") or 0, 35)
+        # 原来的加减项全部作废，否则"构成加起来 90、显示 35"会自相矛盾
+        ev["score_parts"] = [{"label": "自审发现日期矛盾，原匹配度作废，封顶 35", "delta": ev["score"]}]
         ev["summary"] = "原文日期自相矛盾，先核对再决定；不要按这个倒计时安排时间。"
         ev["reasons"] = ["自审发现活动时间与截止日期冲突，原有匹配度判断已作废"]
         ev["actions"] = [

@@ -309,3 +309,18 @@ textarea::placeholder { color: #4d5f78; }
   .result-panel { min-height: auto; }
   .empty { height: 220px; }
 }
+
+/* 分数构成：把加减项摊开，回应"凭什么这个分" */
+.parts { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; }
+.parts .part {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 13px; color: var(--dim); padding: 4px 0;
+  border-bottom: 1px dashed rgba(120, 180, 255, 0.08);
+}
+.parts .part:last-child { border-bottom: 0; }
+.parts .part b { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+.parts .part b.up { color: #4ade80; }
+.parts .part b.down { color: #f87171; }
+.parts .part.total { margin-top: 4px; padding-top: 8px; border-top: 1px solid var(--line); color: #e6f0ff; }
+.parts .part.total b { font-size: 15px; color: #22d3ee; }
+.parts-hint { margin: 10px 0 0; font-size: 12px; line-height: 1.6; color: var(--dim); opacity: .8; }
